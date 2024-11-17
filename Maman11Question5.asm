@@ -1,7 +1,7 @@
 #################### Data Segment ##################
 .data
 user_message: .asciiz "In what base to print  2-10?" 
-array: .word -1, 2, -25, 56, -5, 6, -7, 12, 127 , -3
+array: .word 0, 2, -25, 56, -5, 6, -7, 12, 127 , -3
 
 try: .asciiz "HERE"
 msgB: .asciiz "print_array_sign"
@@ -144,7 +144,7 @@ incorrect_integer:
     
     # --------- TRY ---------
     la $a2, array 	          #array address
-    jal print_dif_unsign
+    jal print_sum_unsign
     
     
 #######################################################################
@@ -176,8 +176,14 @@ print_base:
     lw $a2 ,4($sp)          #loading  $a2 the number    
     lw $a1 ,0($sp)          #loading  $a1 the base     
     li $t1 ,0x0             #initilize stack pointer
-    ble $a2 , 0x0 ,negative_case #check if the number is negative
+    li $t4 , 0              #initialize counter to 0
+    blt $a2 , 0 ,negative_case #check if the number is negative
+    beq $a2 , 0 , loop         #edge case 0
+    bne $a1 , 2 , loop_base_not_2
     j loop
+    
+
+    
 negative_case:
     beq $a3 , 0 , negative_unsign     #if we in unsign case
     #----negative with sign---
@@ -186,21 +192,29 @@ negative_case:
     li $v0, 11         # Syscall code for printing a character
     li $a0, 45         # ASCII code for '-'
     syscall            # Print '-'
+    bne $a1 , 2 , loop_base_not_2
     j loop
 
 negative_unsign:
     addi $a2, $a2, 0xFFFFFFFF  # Invert all bits in $a2  
     addi $a2 , $a2 , 1 #Add in lsb 1    
+
+loop_base_not_2:
+     beq $a2 , 0x0 , print_the_stack 
+
     
 loop:
-    beq $a2 , 0x0 , print_the_stack
+     beq $t4 , 31 , print_the_stack # Exit after 32 iterations
     divu $a2 , $a1      #assume the base != 0 
     mfhi $t2               # high a2 mod a1
     mflo $a2               #low a2/a1
+    
     #-------Save in the stack-------------
     addiu $sp, $sp, -4          #Make room for number
     sw $t2, 0($sp)             #Save in the stack
-    addi $t1,$t1,0x1
+    addi $t1,$t1,0x1      #counter of the stack ++
+    addi $t4 , $t4 , 0x1  #counter ++
+    bne $a1 , 2 , loop_base_not_2
     j loop  
 	
 print_the_stack:
@@ -506,7 +520,7 @@ end_loop20471:
     jr $ra                   # Return to the caller    
     
 #--------Print_array_usign Q5 F-------------- 		
-print_dif_unsign:
+print_sum_unsign:
 
     # Save registers on the stack
     addiu $sp, $sp, -12       # Adjust stack pointer for 3 saved registers
@@ -519,7 +533,7 @@ print_dif_unsign:
     lw $t2, 4($sp)            # Load array address into $t2
     li $t1, 9                 # Number of pairs to process (10 elements in total)
     li $t3, 0                 # Initialize pair counter
-    li $a3, 1                # Initialize signed flag
+    li $a3, 0                # Initialize signed flag
   
     
 loopF:
