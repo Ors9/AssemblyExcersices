@@ -1,21 +1,53 @@
-#################### Data Segment ##################
+# Name: Or Saban
+# Title: Maman 11 question 5
+# ID: 208248716
+# Date: 8.12.24
+# File name: Maman11Question5.asm
+# Description: 
+# This program performs various operations on an array of integers,
+# including printing signed and unsigned values, calculating sums,
+# and computing differences. The user is prompted to select a base
+# (between 2 and 10), and the array operations are performed in
+# the specified base.
+#
+# Main Operations:
+# A. Print array values as signed integers in the chosen base.
+# B. Print array values as unsigned integers in the chosen base.
+# C. Compute the sum of signed integers in the array.
+# D. Compute the sum of unsigned integers in the array.
+# E. Print the difference between pairs of signed integers.
+# F. Print the sum of unsigned differences.
+
+####################----------- Data Segment--------------- ##################
 .data
-user_message: .asciiz "In what base to print  2-10?" 
-array: .word 0, 2, -25, 56, -5, 6, -7, 12, 127 , -3
+# Messages for user prompts and outputs
+user_message: .asciiz "In what base to print  2-10?"   # Prompt user to select base
+msgB: .asciiz "print_array_sign"                      # Label for signed array print
+msgC: .asciiz "print_array_unsign"                   # Label for unsigned array print
+msgC2: .asciiz "sum_sign"                            # Label for signed sum calculation
+msgD: .asciiz "sum_unsign"                           # Label for unsigned sum calculation
+msgE: .asciiz "print_dif_sign"                       # Label for signed differences
+msgG: .asciiz "print_dif_unsign"                     # Label for unsigned differences
 
-try: .asciiz "HERE"
-msgB: .asciiz "print_array_sign"
-msgC: .asciiz "print_array_unsign"
-msgC2: .asciiz "sum_sign"
-msgD: .asciiz "sum_unsign"
-msgE: .asciiz "print_dif_sign"
-msgG: .asciiz "print_dif_unsign"
+# Data structures
+array: .word 0, 20, -200, 50, -600, 16, -17, 122, 12, -5   # Array of integers for processing
 
-#################### Code Segment ##################
+####################------ Code Segment -------------##################
 .text
 main:
+# Purpose: Main function to handle user input and call sub-functions for array operations.
+# Input: None (reads integer input from the user).
+# Output: Executes all array operations and prints results.
+# Logic:
+# 1. Prompt user for a valid base (between 2 and 10).
+# 2. Call sub-functions to:
+#    a. Print array as signed values.
+#    b. Print array as unsigned values.
+#    c. Compute and print sums (signed and unsigned).
+#    d. Compute and print differences (signed and unsigned).
 
-#----------Maman 11 Q5 A----------------
+
+#####----------Maman 11 Q5 A----------------#######################
 incorrect_integer:
    # --------- Print input message --------- #
     la $a0, user_message          # Load address of input message into $a0
@@ -36,9 +68,8 @@ incorrect_integer:
     addi $sp, $sp, -4             # Adjust stack pointer to allocate space
     sw $a1, 0($sp)                # Store $a1 on the stack
    
- 
-###################TTTTTTESSSSSSSSTTTTT STARTTTTTT#####################
-############################### B #####################################
+
+###############################Call Question B #####################################
     # --------- Print Original Message ---------
     la $a0, msgB      # Load address of input message to $a0
     li $v0, 4              # Syscall to print the string
@@ -49,13 +80,13 @@ incorrect_integer:
     li $a0, 10             # ASCII code for newline 
     syscall
     
-    # --------- TRY ---------
+    # --------- CALL Q B ---------
     la $a2, array 	          #array address
    
     jal print_array_sign
 
 
-############################### C #####################################
+###############################Call Question C #####################################
   
     # --------- Print Original Message ---------
     la $a0, msgC      # Load address of input message to $a0
@@ -67,13 +98,13 @@ incorrect_integer:
     li $a0, 10             # ASCII code for newline 
     syscall
     
-    # --------- TRY ---------
+    # --------- CALL Q C ---------
     la $a2, array 	          #array address
     jal print_array_unsign
     
 
 
-############################### D #####################################
+###############################Call Question D #####################################
   
     # --------- Print Original Message ---------
     la $a0, msgC2      # Load address of input message to $a0
@@ -85,13 +116,13 @@ incorrect_integer:
     li $a0, 10             # ASCII code for newline 
     syscall
     
-    # --------- TRY ---------
+    # --------- CALL Q D ---------
     la $a2, array 	          #array address
     jal sum_sign
     
  
     
-############################### E #####################################
+############################### Call Question E #####################################
   
     # --------- Print Original Message ---------
     la $a0, msgD           # Load address of input message to $a0
@@ -103,15 +134,12 @@ incorrect_integer:
     li $a0, 10             # ASCII code for newline 
     syscall
     
-    # --------- TRY ---------
+    # --------- CALL Q E ---------
     la $a2, array 	          #array address
     jal sum_unsign
-    
+     
 
-    
-#######################################################################  
-
-############################### F #####################################
+###############################Call Question F #####################################
   
     # --------- Print Original Message ---------
     la $a0, msgE           # Load address of input message to $a0
@@ -123,14 +151,12 @@ incorrect_integer:
     li $a0, 10             # ASCII code for newline 
     syscall
     
-    # --------- TRY ---------
+    # --------- CALL Q F ---------
     la $a2, array 	          #array address
     jal print_dif_sign
     
-    
-#######################################################################
 
-############################### G #####################################
+###############################Call Question G #####################################
   
     # --------- Print Original Message ---------
     la $a0, msgG           # Load address of input message to $a0
@@ -142,19 +168,13 @@ incorrect_integer:
     li $a0, 10             # ASCII code for newline 
     syscall
     
-    # --------- TRY ---------
+    # --------- CALL Q G ---------
     la $a2, array 	          #array address
     jal print_sum_unsign
     
     
 #######################################################################
 
-
-###################TTTTTTESSSSSSSSTTTTT ENNNNNNNNNNNDDDDDDDDD#####################
-
-
-     
-   
    
 # --------- Exit Program --------- #
 finish:
@@ -162,8 +182,19 @@ finish:
     syscall
 	
 #---------Print_base function--------------
-	
-print_base: 
+print_base:
+# Purpose: Print a number in a specific base (signed or unsigned),if the number negative print the 
+# absoulut value and add - at start
+# Inputs:
+#   $a1 - The base to use for conversion (2-10).
+#   $a2 - The number to convert and print.
+#   $a3 - Sign flag (1 for signed, 0 for unsigned).
+# Outputs: The number is printed in the specified base.
+# Logic:
+# 1. Check if the number is negative (signed case only).
+# 2. Convert the number to the specified base and store the digits on a stack.
+# 3. Print digits in reverse order by popping the stack.
+
     #----saving in stack-----------
     addiu $sp ,$sp ,-16        #Adjust stack pointer
     sw $ra , 12($sp)          #Save return address
@@ -245,7 +276,17 @@ done_print:
 	
 	
 #--------Print_array_sign Q5 B--------------
-print_array_sign:	
+print_array_sign:
+# Purpose: Print all elements of the array as signed integers in a given base.
+# Inputs:
+#   $a1 - The base to use for conversion.
+#   $a2 - The starting address of the array.
+# Outputs: Array elements are printed as signed integers in the specified base.
+# Logic:
+# 1. Loop through all elements of the array (10 elements).
+# 2. Call `print_base` for each element with the signed flag set.
+# 3. Print a space between elements.
+# 4. Print a newline after the array.	
     #----Saving Registers on the Stack-----------
     addiu $sp, $sp, -12      # Adjust stack pointer for 4 words
     sw $ra, 8($sp)           # Save return address
@@ -299,6 +340,16 @@ end_loop:
     
 #--------Print_array_usign Q5 C--------------    
 print_array_unsign:
+# Purpose: Print all elements of the array as unsigned integers in a given base.
+# Inputs:
+#   $a1 - The base to use for conversion.
+#   $a2 - The starting address of the array.
+# Outputs: Array elements are printed as unsigned integers in the specified base.
+# Logic:
+# 1. Loop through all elements of the array (10 elements).
+# 2. Call `print_base` for each element with the unsigned flag set.
+# 3. Print a space between elements.
+# 4. Print a newline after the array.
      #----Saving Registers on the Stack-----------
     addiu $sp, $sp, -12      # Adjust stack pointer for 4 words
     sw $ra ,8($sp)
@@ -351,6 +402,15 @@ end_loop1:
 	
 #--------Print_array_usign Q5 D-------------- 	
 sum_sign:
+# Purpose: Compute the sum of all elements in the array as signed integers.
+# Inputs:
+#   $a2 - The starting address of the array.
+#   $a1 - The base for printing the result.
+# Outputs: Prints the sum of the array elements as a signed integer in the specified base.
+# Logic:
+# 1. Initialize a sum register to 0.
+# 2. Loop through all elements of the array and add them to the sum.
+# 3. Call `print_base` to print the final sum.
 
      #----Saving Registers on the Stack-----------
     addiu $sp, $sp, -12     # Adjust stack pointer for 4 words
@@ -405,7 +465,15 @@ end_loop2:
     
 #--------Print_array_usign Q5 E-------------- 	
 sum_unsign:
-
+# Purpose: Compute the sum of all elements in the array as unsigned integers.
+# Inputs:
+#   $a2 - The starting address of the array.
+#   $a1 - The base for printing the result.
+# Outputs: Prints the sum of the array elements as an unsigned integer in the specified base.
+# Logic:
+# 1. Initialize a sum register to 0.
+# 2. Loop through all elements of the array and add them (unsigned addition).
+# 3. Call `print_base` to print the final sum.
     #----Saving Registers on the Stack-----------
     addiu $sp, $sp, -12      # Adjust stack pointer for 4 words
     sw $ra, 8($sp)          # Save return address
@@ -463,6 +531,15 @@ end_loop3:
 	
 #--------Print_array_usign Q5 F-------------- 		
 print_dif_sign:
+# Purpose: Compute and print the difference between consecutive signed array elements.
+# Inputs:
+#   $a2 - The starting address of the array.
+#   $a1 - The base for printing the differences.
+# Outputs: Prints the differences between consecutive elements as signed integers.
+# Logic:
+# 1. Loop through the array in pairs (e.g., `array[0] - array[1]`).
+# 2. Call `print_base` for each computed difference.
+# 3. Print a space between differences and a newline after the last one.
 
     # Save registers on the stack
     addiu $sp, $sp, -12       # Adjust stack pointer for 3 saved registers
@@ -521,6 +598,15 @@ end_loop20471:
     
 #--------Print_array_usign Q5 F-------------- 		
 print_sum_unsign:
+# Purpose: Compute and print the sum of unsigned differences between consecutive array elements.
+# Inputs:
+#   $a2 - The starting address of the array.
+#   $a1 - The base for printing the results.
+# Outputs: Prints the sum of unsigned differences.
+# Logic:
+# 1. Loop through the array in pairs (e.g., `abs(array[0] - array[1])`).
+# 2. Compute the absolute difference using unsigned arithmetic.
+# 3. Call `print_base` to print the final result.:
 
     # Save registers on the stack
     addiu $sp, $sp, -12       # Adjust stack pointer for 3 saved registers
